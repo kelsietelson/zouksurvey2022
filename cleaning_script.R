@@ -105,7 +105,7 @@ data <- data %>%
 
 # Formating column types
 data2 <- data %>%
-  mutate(age = as.numeric(gsub("([0-9]+).*$", "\\1", age)),
+  dplyr::mutate(age = as.numeric(gsub("([0-9]+).*$", "\\1", age)),
          role = factor(role),
          exp_years = as.numeric(dplyr::case_when(exp_years == "Less than a year." ~ "1", 
                                       exp_years == ".4" ~ ".4",
@@ -151,7 +151,47 @@ data2 <- data %>%
                                                           "Multiple times a week")),
          gc_type = factor(gc_type, levels = c("In Person", "Online", "Mixed")),
          gc_hours = as.numeric(dplyr::case_when(gc_hours == ".5" ~ ".5",
-                               TRUE ~ stringr::str_extract(gc_hours, "\\d+\\.*\\d*")))
-  )
+                               TRUE ~ stringr::str_extract(gc_hours, "\\d+\\.*\\d*"))),
+         gc_learning_style = factor(gc_learning_style),
+         gc_structure = factor(gc_structure, levels = c("Concept based", "Pattern based", "Equal mix of both")),
+         gc_topics = factor(gc_topics),
+         gc_length = factor(gc_length),
+         gc_prog_drop = factor(gc_prog_drop, levels = c("Weekly Drop In Classes", "Progressive Closed Group Classes", "Both equally")),
+         gc_practica = factor(gc_practica, levels = c("Not at all important", "A little important", "Very important")),
+         gc_practica_price = factor(gc_practica_price, levels = c("$0", "$5", "$8", "$10", "$15")),
+         instructor_events = factor(instructor_events, levels = c("Not at all important", "A little important", "Very important")),
+         private_lesson = factor(private_lesson, levels = c("Yes", "No")),
+         private_offer = factor(private_offer, levels = c("Single", "Package", "Mix")),
+         private_type = factor(private_type, levels = c("In Person", "Online", "Mix of both")),
+         private_freq = factor(private_freq, levels = c("Only at events", "A few times a year, or less", "Every few months","More than once a month","Weekly")),
+         private_where = factor(private_where, levels = c("Local instructors only", "Professionals at events only", "Mix of both")),
+         socials = factor(socials),
+         social_invite = factor(social_invite, levels = c("Sometimes, it depends on the day/event", "Yes, but only if I know them already", "Yes")),
+         social_give_correction = factor(social_give_correction),
+         social_get_correction = factor(social_get_correction), 
+         social_start = format(lubridate::parse_date_time(social_start, c('HMS', 'HM')), '%H:%M'), # Come back and figure out recode for these :p 
+         social_start_ideal = format(lubridate::parse_date_time(social_start_ideal, c('HMS', 'HM')), '%H:%M'),
+         social_arrive = format(lubridate::parse_date_time(social_arrive, c('HMS', 'HM')), '%H:%M'),
+         social_depart = format(lubridate::parse_date_time(social_depart, c('HMS', 'HM')), '%H:%M'),
+         social_songs = factor(social_songs, levels = c("1", "2", "3", "4-6")),
+         social_dj_price = factor(social_dj_price, levels = c("$0", "$5", "$8", "$10", "$15"))) %>%
+  dplyr::mutate(dplyr::across(dplyr::starts_with("r_"), as.factor)) %>%
+  dplyr::mutate(dplyr::across(dplyr::starts_with("s_"), ~factor(.x, levels = c("Only with specific people",
+                                                                "Rarely",
+                                                                "Some of the time", 
+                                                                "Most of the time", 
+                                                                "Always")))) %>%
+  dplyr::mutate(dplyr::across(dplyr::starts_with("c_"), ~factor(.x, levels = c("NA (I haven't learned or had connections this way)",
+                                                                               "Never",
+                                                                               "Only with specific partners", 
+                                                                               "Sometimes", 
+                                                                               "Usually",
+                                                                               "Always")))) %>%
+  dplyr::mutate(dplyr::across(dplyr::starts_with("wyr_"), ~factor(.x, levels = c("A",
+                                                                                 "B"))))
+
            
-  
+# Event section
+# Remaining general section
+# Bug in time recode
+# Open ended
