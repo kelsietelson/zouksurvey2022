@@ -193,5 +193,10 @@ data2 <- data %>%
            
 # Event section
 # Remaining general section
+# currency
 # Bug in time recode
 # Open ended
+open_ended <- data2 %>%
+  dplyr::select(gc_barrier, private_goals, challenge, fear, rewarding, retention, more_accessibility, comments)
+
+write.csv(open_ended, file = "open_ended.csv")
